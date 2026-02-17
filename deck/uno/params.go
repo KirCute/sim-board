@@ -47,7 +47,7 @@ func Create(params *Params) *Uno {
 	for k := 0; k < params.Count; k++ {
 		for i := 0; i < params.CountColor; i++ {
 			for j := 0; j < params.CountRank; j++ {
-				ret.rest = append(ret.rest, sim_board.Card(fmt.Sprintf("%s-plain-%d", COLORS[i], 10-j)))
+				ret.rest = append(ret.rest, sim_board.Card(fmt.Sprintf("%s-plain-%d", COLORS[i], 9-j)))
 			}
 			for j := 0; j < params.CountColoredApp2; j++ {
 				ret.rest = append(ret.rest, sim_board.Card(fmt.Sprintf("%s-plain-+2", COLORS[i])))
