@@ -7,7 +7,7 @@
 ### 快速开始
 - 直接编译：
 
-  1. 编译[前端](github.com/KirCute/sim-board-frontend)。
+  1. 编译[前端](https://github.com/KirCute/sim-board-frontend)。
   2. 将编译好的前端放在`./public/dist`。
   3. 编译后端，运行。
 
