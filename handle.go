@@ -38,14 +38,10 @@ type BroadcastResponse struct {
 }
 
 func (r *Room) makeBroadcastResp() *BroadcastResponse {
-	players := make([]string, 0, len(r.conn))
-	for player := range r.conn {
-		players = append(players, player)
-	}
 	return &BroadcastResponse{
 		Board:   r.board,
 		Decks:   r.marshalDeck(),
-		Players: players,
+		Players: r.players,
 	}
 }
 
@@ -238,6 +234,7 @@ func (r *Room) handleReset() {
 			delete(hole, card)
 		}
 	}
+	r.placeCnter = 0
 	r.broadcast()
 }
 
@@ -250,6 +247,7 @@ func (r *Room) handleAllCollect(player string) {
 		hole[card.Card]++
 		delete(r.board, id)
 	}
+	r.placeCnter = 0
 	r.broadcast()
 }
 

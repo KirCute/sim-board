@@ -43,6 +43,7 @@ type Room struct {
 	board      map[string]*PublicCard
 	hole       map[string]map[DeckCard]int
 	decks      []Deck
+	players    []string
 	placeCnter uint
 }
 
@@ -99,6 +100,7 @@ func (r *Room) handleQuit(m *joinQuitMsg) {
 func (r *Room) handleJoin(m *joinQuitMsg) {
 	r.conn[m.player] = append(r.conn[m.player], m.conn)
 	if _, ok := r.hole[m.player]; !ok {
+		r.players = append(r.players, m.player)
 		r.hole[m.player] = make(map[DeckCard]int)
 	}
 	r.handleWelcome(m.player)
@@ -156,12 +158,6 @@ func (r *Room) handleCommand(name string) {
 	}
 }
 
-var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
-
 func initStatic(r *gin.Engine, public fs.FS) {
 	r.Use(func(c *gin.Context) {
 		if strings.HasPrefix(c.Request.RequestURI, "/assets/") {
@@ -193,8 +189,10 @@ func initStatic(r *gin.Engine, public fs.FS) {
 }
 
 func Run(public fs.FS) {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	initStatic(r, public)
+	upgrader := websocket.Upgrader{}
 	r.GET("/ws", func(c *gin.Context) {
 		logrus.Infof("handshake from %s", c.ClientIP())
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
